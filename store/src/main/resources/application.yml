@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: 'store'
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8500/eureka}
+server:
+  port: 8501
+  servlet:
+    context-path: '/store'

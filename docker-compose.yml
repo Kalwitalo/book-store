@@ -1,0 +1,48 @@
+services:
+  eureka-server:
+    build:
+      dockerfile: Dockerfile
+      context: ./eureka-server
+    ports:
+      - '8500:8500'
+    expose:
+      - 8500
+
+  store:
+    build:
+      dockerfile: Dockerfile
+      context: ./store
+    depends_on:
+      - eureka-server
+    environment:
+      - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka
+    ports:
+      - '8501:8501'
+    expose:
+      - 8501
+
+  provider:
+    build:
+      dockerfile: Dockerfile
+      context: ./provider
+    depends_on:
+      - eureka-server
+    environment:
+      - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka
+    ports:
+      - '8502:8502'
+    expose:
+      - 8502
+
+  api-gateway:
+    build:
+      dockerfile: Dockerfile
+      context: ./api-gateway
+    depends_on:
+      - store
+    environment:
+      - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka
+    ports:
+      - '5555:5555'
+    expose:
+      - 5555
